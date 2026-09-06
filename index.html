@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0a1628" />
+    <meta name="description" content="Recycle Renegades: a pixel art ocean conservation game. Collect plastic, rescue marine life, restore coral reefs, and invest in real-world science solutions." />
+    <meta name="keywords" content="ocean conservation, plastic pollution, coral reef, marine life, educational game, pixel art" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Recycle Renegades — Ocean Conservation Game" />
+    <meta property="og:description" content="Collect plastic, rescue marine life, restore coral reefs, and invest in real-world science solutions. A pixel art ocean conservation game." />
+    <meta property="og:url" content="https://anomalyco.github.io/Recycle-Renegades-webgame/" />
+    <meta property="og:image" content="https://anomalyco.github.io/Recycle-Renegades-webgame/assets/banners/hero-1920x600.png" />
+    <meta property="og:image:width" content="1920" />
+    <meta property="og:image:height" content="600" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Recycle Renegades — Ocean Conservation Game" />
+    <meta name="twitter:description" content="Collect plastic, rescue marine life, restore coral reefs, and invest in real-world science solutions. A pixel art ocean conservation game." />
+    <meta name="twitter:image" content="https://anomalyco.github.io/Recycle-Renegades-webgame/assets/banners/hero-1920x600.png" />
+
+    <title>Recycle Renegades — Ocean Conservation Game</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+
+    <!-- OG preview alt text -->
+    <meta property="og:image:alt" content="Recycle Renegades ocean conservation game banner with fish, coral, and retro styling" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; overflow: hidden; background: #0a1628; }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: monospace;
+        touch-action: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+      #loading {
+        position: absolute;
+        font-family: monospace;
+        font-size: 14px;
+        color: #4fc3f7;
+        letter-spacing: 0.05em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading">Loading...</div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
