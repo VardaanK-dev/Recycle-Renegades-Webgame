@@ -6,6 +6,7 @@ A web-based **pixel art ocean conservation game** that educates players about th
 
 ## 🎮 Gameplay
 #**For best experience PC is recommended**
+
 Dive into the ocean as a diver-renegade and:
 
 - **Collect plastic waste** — bottles, bags, straws, cups and ghost fishing nets drifting through the water.
