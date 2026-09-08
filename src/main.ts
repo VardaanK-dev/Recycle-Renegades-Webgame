@@ -41,7 +41,16 @@ const config: Phaser.Types.Core.GameConfig = {
   scene: [BootScene, MenuScene, GameScene, CoralMiniGame, ResultsScene, ShopScene, CreditsScene],
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
 
 const el = document.getElementById('loading');
 if (el) el.remove();
+
+const refreshScale = () => {
+  requestAnimationFrame(() => {
+    game.scale.refresh();
+  });
+};
+
+window.addEventListener('resize', refreshScale);
+document.addEventListener('fullscreenchange', refreshScale);

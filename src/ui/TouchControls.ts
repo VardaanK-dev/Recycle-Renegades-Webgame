@@ -7,6 +7,8 @@ export class TouchControls {
   private joystickBase!: Phaser.GameObjects.Image;
   private joystickKnob!: Phaser.GameObjects.Image;
   private actionBtn!: Phaser.GameObjects.Image;
+  private actionSymbol!: Phaser.GameObjects.Image;
+  private actionStar!: Phaser.GameObjects.Image;
   private joystickLabel!: Phaser.GameObjects.Text;
   private actionLabel!: Phaser.GameObjects.Text;
   private activeJoystick: boolean = false;
@@ -15,6 +17,7 @@ export class TouchControls {
   private joystickOrigin = { x: 0, y: 0 };
   private radius = 45;
   private margin = 70;
+  private controlScale = 4;
   private visible = false;
 
   constructor(scene: Phaser.Scene, input: InputManager) {
@@ -26,7 +29,7 @@ export class TouchControls {
   private create(): void {
     const { width, height } = this.scene.scale;
     const margin = this.margin;
-    const scale = 3.4;
+    const scale = this.controlScale;
 
     this.joystickBase = this.scene.add
       .image(margin, height - margin, 'joystick_base')
@@ -52,10 +55,28 @@ export class TouchControls {
       .setDepth(1000)
       .setVisible(false);
 
+    // Dash bolt symbol in the centre of the action button
+    this.actionSymbol = this.scene.add
+      .image(width - margin - 6, height - margin - 2, 'action_symbol')
+      .setScrollFactor(0)
+      .setAlpha(0.95)
+      .setScale(scale * 0.32)
+      .setDepth(1001)
+      .setVisible(false);
+
+    // Rescue star badge on the top-right of the action button
+    this.actionStar = this.scene.add
+      .image(width - margin + 20, height - margin - 20, 'star')
+      .setScrollFactor(0)
+      .setAlpha(0.95)
+      .setScale(scale * 0.3)
+      .setDepth(1001)
+      .setVisible(false);
+
     this.joystickLabel = this.scene.add
       .text(margin, height - margin + 48, 'MOVE', {
         fontFamily: 'monospace',
-        fontSize: '12px',
+        fontSize: '13px',
         color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 3,
@@ -67,9 +88,9 @@ export class TouchControls {
       .setVisible(false);
 
     this.actionLabel = this.scene.add
-      .text(width - margin, height - margin + 48, 'DASH!', {
+      .text(width - margin, height - margin + 48, 'DASH / RESCUE', {
         fontFamily: 'monospace',
-        fontSize: '12px',
+        fontSize: '13px',
         color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 3,
@@ -81,6 +102,21 @@ export class TouchControls {
       .setVisible(false);
 
     this.setupEvents();
+  }
+
+  resize(): void {
+    const { width, height } = this.scene.scale;
+    const margin = this.margin;
+    this.joystickBase.setPosition(margin, height - margin);
+    this.joystickKnob.setPosition(margin, height - margin);
+    this.actionBtn.setPosition(width - margin, height - margin);
+    this.actionSymbol.setPosition(width - margin - 6, height - margin - 2);
+    this.actionStar.setPosition(width - margin + 20, height - margin - 20);
+    this.joystickLabel.setPosition(margin, height - margin + 48);
+    this.actionLabel.setPosition(width - margin, height - margin + 48);
+    this.joystickOrigin = { x: margin, y: height - margin };
+    this.activeJoystick = false;
+    this.input.touchVector = { x: 0, y: 0 };
   }
 
   private setupEvents(): void {
@@ -116,6 +152,8 @@ export class TouchControls {
     this.joystickBase.setVisible(true);
     this.joystickKnob.setVisible(true);
     this.actionBtn.setVisible(true);
+    this.actionSymbol.setVisible(true);
+    this.actionStar.setVisible(true);
     this.joystickLabel.setVisible(true);
     this.actionLabel.setVisible(true);
   }
@@ -125,6 +163,8 @@ export class TouchControls {
     this.joystickBase.setVisible(false);
     this.joystickKnob.setVisible(false);
     this.actionBtn.setVisible(false);
+    this.actionSymbol.setVisible(false);
+    this.actionStar.setVisible(false);
     this.joystickLabel.setVisible(false);
     this.actionLabel.setVisible(false);
     this.input.touchVector = { x: 0, y: 0 };
@@ -159,7 +199,9 @@ export class TouchControls {
     } else if (this.actionPointerId === null && this.isPointerInAction(pointer)) {
       this.actionPointerId = pointer.id;
       this.input.touchAction = true;
-      this.actionBtn.setScale(2.9);
+      this.actionBtn.setScale(this.controlScale * 0.9);
+      this.actionSymbol.setScale(this.controlScale * 0.3);
+      this.actionStar.setScale(this.controlScale * 0.27);
     }
   }
 
@@ -196,7 +238,9 @@ export class TouchControls {
     if (pointer.id === this.actionPointerId) {
       this.actionPointerId = null;
       this.input.touchAction = false;
-      this.actionBtn.setScale(3.4);
+      this.actionBtn.setScale(this.controlScale);
+      this.actionSymbol.setScale(this.controlScale * 0.32);
+      this.actionStar.setScale(this.controlScale * 0.3);
     }
   }
 }

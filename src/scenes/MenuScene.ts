@@ -6,6 +6,10 @@ import {
   unlockAllCheat,
   CHEAT_UNLOCKALL_COMMAND,
 } from '../systems/EconomyManager';
+import { setUpResponsiveFit } from '../utils/responsive';
+
+const DESIGN_W = 800;
+const DESIGN_H = 600;
 
 export class MenuScene extends Phaser.Scene {
   private typed = '';
@@ -16,32 +20,27 @@ export class MenuScene extends Phaser.Scene {
 
   create(): void {
     const { width, height } = this.scale;
+
+    // Background always fills the window (not scaled with the design container)
     this.add.image(0, 0, 'results_bg').setOrigin(0).setDisplaySize(width, height);
+    this.spawnBubbles(width, height);
 
-    // Animated background bubbles
-    for (let i = 0; i < 12; i++) {
-      const x = Math.random() * width;
-      const y = height + Math.random() * 200;
-      const bubble = this.add.image(x, y, 'bubble').setScale(2 + Math.random() * 3).setAlpha(0.4);
-      this.tweens.add({
-        targets: bubble,
-        y: -50,
-        alpha: 0,
-        duration: 8000 + Math.random() * 6000,
-        repeat: -1,
-        delay: Math.random() * 3000,
-      });
-    }
+    // Responsive design-space container (800x600 layout scales to fit window)
+    const ui = this.add.container(0, 0);
+    setUpResponsiveFit(this, ui, DESIGN_W, DESIGN_H);
 
-    const title = this.add.text(width / 2, 76, 'RECYCLE RENEGADES', {
+    const title = this.add.text(400, 76, 'RECYCLE RENEGADES', {
       fontFamily: 'monospace',
       fontSize: '38px',
       color: '#4dd0e1',
       stroke: '#003',
       strokeThickness: 4,
     }).setOrigin(0.5);
+    ui.add(title);
+    title.setInteractive({ useHandCursor: true });
+    title.on('pointerdown', () => this.onTitleTap());
 
-    this.add.text(width / 2, 118, 'Save the Ocean!', {
+    this.add.text(400, 118, 'Save the Ocean!', {
       fontFamily: 'monospace',
       fontSize: '16px',
       color: '#ffe082',
@@ -56,10 +55,10 @@ export class MenuScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
     });
 
-    const diver = this.add.image(width / 2 - 110, 172, 'player').setScale(3);
-    this.tweens.add({ targets: diver, y: 162, duration: 1000, yoyo: true, repeat: -1 });
+    this.add.image(400 - 110, 172, 'player').setScale(3);
 
-    this.add.text(width / 2, 206, [
+    // Controls hint moved into container (design coords)
+    ui.add(this.add.text(400, 206, [
       'Move: WASD / Arrows / Touch Joystick',
       'Action: SPACE / Button  (dash + rescue)   Tools: 1-5',
     ], {
@@ -67,13 +66,13 @@ export class MenuScene extends Phaser.Scene {
       fontSize: '11px',
       color: '#b3e5fc',
       align: 'center',
-    }).setOrigin(0.5);
+    }).setOrigin(0.5));
 
     // Level buttons in two columns (mobile-first thumb zones)
     LEVELS.forEach((level, i) => {
       const col = i % 2;
       const rowI = Math.floor(i / 2);
-      const x = width / 2 + (col === 0 ? -120 : 120);
+      const x = 400 + (col === 0 ? -120 : 120);
       const y = 280 + rowI * 58;
       const unlocked = isLevelUnlocked(i);
       const text = unlocked ? `${i + 1}. ${level.name}` : `${i + 1}. ???`;
@@ -97,6 +96,7 @@ export class MenuScene extends Phaser.Scene {
             fixedWidth: 205,
             align: 'center',
           }).setOrigin(0.5);
+      ui.add(btn);
 
       if (unlocked) {
         btn.on('pointerover', () => btn.setBackgroundColor('rgba(0,150,136,0.95)'));
@@ -108,7 +108,7 @@ export class MenuScene extends Phaser.Scene {
     });
 
     // Science Lab (shop)
-    const shopBtn = this.add.text(width / 2, 426, 'SCIENCE LAB  —  BUY SOLUTIONS', {
+    const shopBtn = this.add.text(400, 426, 'SCIENCE LAB  —  BUY SOLUTIONS', {
       fontFamily: 'monospace',
       fontSize: '15px',
       color: '#ffffff',
@@ -117,25 +117,26 @@ export class MenuScene extends Phaser.Scene {
       fixedWidth: 320,
       align: 'center',
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    ui.add(shopBtn);
     shopBtn.on('pointerover', () => shopBtn.setBackgroundColor('rgba(142,36,170,1)'));
     shopBtn.on('pointerout', () => shopBtn.setBackgroundColor('rgba(123,31,162,0.9)'));
     shopBtn.on('pointerdown', () => this.scene.start('ShopScene'));
 
-    // Stats + wallet
-    this.add.image(width / 2 - 158, 470, 'rr_coin').setScale(1.6);
-    this.add.text(width / 2 - 150, 470, `${gameState.researchPoints} RR   Score: ${gameState.totalScore}   High: ${gameState.highScore}`, {
+    // Stats + wallet (coin texture is 2x (24px) scaled 1.4 = 33.6px wide)
+    ui.add(this.add.image(400 - 190, 470, 'rr_coin').setScale(1.4));
+    ui.add(this.add.text(400 - 158, 470, `RR ${gameState.researchPoints}   Score: ${gameState.totalScore}   High: ${gameState.highScore}`, {
       fontFamily: 'monospace',
       fontSize: '12px',
       color: '#ffe082',
-    }).setOrigin(0, 0.5);
+    }).setOrigin(0, 0.5));
 
-    const resetBtn = this.add.text(width / 2 - 96, height - 22, 'RESET PROGRESS', {
+    const resetBtn = this.add.text(400 - 96, 600 - 22, 'RESET PROGRESS', {
       fontFamily: 'monospace',
       fontSize: '12px',
       color: '#ef9a9a',
       padding: { x: 10, y: 6 },
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
+    ui.add(resetBtn);
     resetBtn.on('pointerover', () => resetBtn.setText('Click to erase save'));
     resetBtn.on('pointerout', () => resetBtn.setText('RESET PROGRESS'));
     resetBtn.on('pointerdown', () => {
@@ -143,12 +144,13 @@ export class MenuScene extends Phaser.Scene {
       this.scene.restart();
     });
 
-    const creditsBtn = this.add.text(width / 2 + 96, height - 22, 'CREDITS', {
+    const creditsBtn = this.add.text(400 + 96, 600 - 22, 'CREDITS', {
       fontFamily: 'monospace',
       fontSize: '12px',
       color: '#81d4fa',
       padding: { x: 10, y: 6 },
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    ui.add(creditsBtn);
     creditsBtn.on('pointerover', () => creditsBtn.setBackgroundColor('rgba(80,180,255,0.25)'));
     creditsBtn.on('pointerout', () => creditsBtn.setBackgroundColor('transparent'));
     creditsBtn.on('pointerdown', () => this.scene.start('CreditsScene'));
@@ -167,9 +169,29 @@ export class MenuScene extends Phaser.Scene {
       } else {
         this.scale.startFullscreen();
       }
+      // Refire immediately so the layout responds even if no window resize event fires
+      this.time.delayedCall(60, () => this.scale.refresh());
     });
 
     this.setupCheats(width, height);
+    ui.setDepth(1);
+    fullBtn.setDepth(50);
+  }
+
+  private spawnBubbles(width: number, height: number): void {
+    for (let i = 0; i < 12; i++) {
+      const x = Math.random() * width;
+      const y = height + Math.random() * 200;
+      const bubble = this.add.image(x, y, 'bubble').setScale(2 + Math.random() * 3).setAlpha(0.4);
+      this.tweens.add({
+        targets: bubble,
+        y: -50,
+        alpha: 0,
+        duration: 8000 + Math.random() * 6000,
+        repeat: -1,
+        delay: Math.random() * 3000,
+      });
+    }
   }
 
   private setupCheats(width: number, height: number): void {
@@ -186,66 +208,24 @@ export class MenuScene extends Phaser.Scene {
       }
     });
 
-    // Touch easter egg: draw a circle with one finger anywhere
-    this.setupCircleGesture(width, height);
+    // Mobile easter egg: tap the RECYCLE RENEGADES title 5 times quickly
+    // (Replaces the old circle gesture, which was hard to draw on touch.)
   }
 
-  private gesturePoints: { x: number; y: number }[] = [];
-  private gestureActive = false;
-  private gestureStartTime = 0;
+  private titleTaps = 0;
+  private titleTapTimer = 0;
 
-  private setupCircleGesture(width: number, height: number): void {
-    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      this.gesturePoints = [{ x: pointer.x, y: pointer.y }];
-      this.gestureActive = true;
-      this.gestureStartTime = this.time.now;
-    });
-    this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-      if (!this.gestureActive) return;
-      const last = this.gesturePoints[this.gesturePoints.length - 1];
-      if (!last || Math.hypot(pointer.x - last.x, pointer.y - last.y) > 6) {
-        this.gesturePoints.push({ x: pointer.x, y: pointer.y });
-      }
-    });
-    this.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-      if (!this.gestureActive) return;
-      this.gestureActive = false;
-      const elapsed = this.time.now - this.gestureStartTime;
-      const pts = this.gesturePoints;
-      if (elapsed > 5000 || pts.length < 14) return;
-      if (!this.isCircle(pts)) return;
-      this.triggerCheat(width, height);
-    });
-  }
-
-  private isCircle(pts: { x: number; y: number }[]): boolean {
-    let cx = 0, cy = 0;
-    for (const p of pts) { cx += p.x; cy += p.y; }
-    cx /= pts.length; cy /= pts.length;
-
-    let minR = Infinity, maxR = 0;
-    for (const p of pts) {
-      const d = Math.hypot(p.x - cx, p.y - cy);
-      minR = Math.min(minR, d);
-      maxR = Math.max(maxR, d);
+  private onTitleTap(): void {
+    const now = this.time.now;
+    if (now - this.titleTapTimer > 3000) {
+      this.titleTaps = 0;
     }
-    if (minR < 24 || maxR > 220) return false; // too tight or too big
-    if (maxR - minR > 60) return false;        // too ragged
-
-    let prev = Math.atan2(pts[0].y - cy, pts[0].x - cx);
-    let total = 0;
-    for (let i = 1; i < pts.length; i++) {
-      const a = Math.atan2(pts[i].y - cy, pts[i].x - cx);
-      let d = a - prev;
-      if (d > Math.PI) d -= 2 * Math.PI;
-      if (d < -Math.PI) d += 2 * Math.PI;
-      total += d;
-      prev = a;
+    this.titleTapTimer = now;
+    this.titleTaps += 1;
+    if (this.titleTaps >= 5) {
+      this.titleTaps = 0;
+      this.triggerCheat(this.scale.width, this.scale.height);
     }
-    const start = pts[0];
-    const end = pts[pts.length - 1];
-    const closed = Math.hypot(start.x - end.x, start.y - end.y) < maxR * 0.35;
-    return Math.abs(total) > 5.4 && closed; // ~a full revolution
   }
 
   private triggerCheat(width: number, height: number): void {

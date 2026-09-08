@@ -30,7 +30,7 @@ Dive into the ocean as a diver-renegade and:
 ## 🎮 Hidden easter eggs
 
 - **PC:** type `/unlockall` on the menu to unlock every level and get 5000 RP.
-- **Mobile / touch:** draw a full **circle** anywhere on the menu with one finger.
+- **Mobile / touch:** tap the **RECYCLE RENEGADES title 5 times** quickly on the menu.
 
 ## 🧮 Math & Data Integration
 
@@ -45,8 +45,8 @@ Scoring is grounded in math:
 
 | Action | Desktop | Mobile |
 |--------|---------|--------|
-| Move | WASD or Arrow Keys | Virtual joystick (left thumb) |
-| Dash / rescue | Space | Action button (right thumb) |
+| Move | WASD or Arrow Keys | Virtual joystick (left thumb, with MOVE label) |
+| Dash / rescue | Space | Action button (right thumb — ⚡ bolt + ★ star symbols) |
 | Use lab tool | Keys 1–5 | Tap the tool slot (bottom-centre) |
 
 ## 🛠️ Tech Stack

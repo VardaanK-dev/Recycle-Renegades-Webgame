@@ -580,6 +580,29 @@ const SPRITES: Record<string, SpriteDef> = {
       '..GGGG..',
     ],
   },
+
+  // --- DASH/RESCUE SYMBOL (16x16) light-yellow bolt on transparent ---
+  action_symbol: {
+    palette: { W: '#fff59d', D: '#fbc02d' },
+    grid: [
+      '................',
+      '.......WWW......',
+      '......WWWW......',
+      '.....WWW........',
+      '....WW..........',
+      '...WW...........',
+      '..WW.....WW.....',
+      '..WW....WWW.....',
+      '.WW....WW.......',
+      '.WW...WW........',
+      '.WW..WW.........',
+      '...WWW..........',
+      '....WW..........',
+      '................',
+      '................',
+      '................',
+    ],
+  },
 };
 
 // ========== BACKGROUND GENERATORS ==========

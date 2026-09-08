@@ -155,6 +155,9 @@ export class GameScene extends Phaser.Scene {
 
   private handleResize(gameSize: Phaser.Structs.Size): void {
     this.bg.resize(gameSize.width, gameSize.height);
+    this.hud.resize();
+    this.touchControls.resize();
+    this.consoleToolbar.refresh();
   }
 
   private setupKeyboard(): void {

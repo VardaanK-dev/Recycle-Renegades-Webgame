@@ -58,7 +58,7 @@ export class HUD {
       .setScale(1.4);
 
     this.rpText = this.scene.add
-      .text(32, 28, '0 RR', {
+      .text(35, 28, '0 RR', {
         fontFamily: 'monospace',
         fontSize: '13px',
         color: '#ffd54f',
@@ -144,6 +144,29 @@ export class HUD {
 
   updateScore(score: number): void {
     this.scoreText.setText(`Score: ${score}`);
+  }
+
+  resize(): void {
+    const { width, height } = this.scene.scale;
+    this.scoreText.setPosition(12, 6);
+    this.rpCoin.setPosition(16, 36);
+    this.rpText.setPosition(35, 28);
+    this.rescueText.setPosition(12, 52);
+    this.cleanText.setPosition(width / 2, 8);
+    this.dashLabel.setPosition(width / 2, height - 92);
+    this.drawDashBar(width / 2 - this.dashBarWidth / 2, height - 80);
+    this.drawCleanBar(0, width / 2 - this.cleanBarWidth / 2, 24);
+    for (let i = 0; i < this.hearts.length; i++) {
+      this.hearts[i].setPosition(width - 22 - i * 26, 20);
+    }
+    this.powerIndicators.forEach((ind, idx) => {
+      const x = width - 22;
+      const y = 56 + idx * 30;
+      ind.icon.setPosition(x, y);
+    });
+    if (this.comboText) {
+      this.comboText.setPosition(width / 2, 190);
+    }
   }
 
   updateResearchPoints(rp: number): void {

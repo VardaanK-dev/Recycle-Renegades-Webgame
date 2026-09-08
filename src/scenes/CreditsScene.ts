@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { setUpResponsiveFit } from '../utils/responsive';
 
 export class CreditsScene extends Phaser.Scene {
   constructor() {
@@ -9,7 +10,10 @@ export class CreditsScene extends Phaser.Scene {
     const { width, height } = this.scale;
     this.add.image(0, 0, 'results_bg').setOrigin(0).setDisplaySize(width, height);
 
-    this.add.text(width / 2, 46, 'CREDITS', {
+    const ui = this.add.container(0, 0);
+    setUpResponsiveFit(this, ui, 800, 600);
+
+    this.add.text(400, 46, 'CREDITS', {
       fontFamily: 'monospace',
       fontSize: '28px',
       color: '#4dd0e1',
@@ -17,7 +21,7 @@ export class CreditsScene extends Phaser.Scene {
       strokeThickness: 3,
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, 86, 'RECYCLE RENEGADES — a game about saving the reef', {
+    this.add.text(400, 86, 'RECYCLE RENEGADES — a game about saving the reef', {
       fontFamily: 'monospace',
       fontSize: '12px',
       color: '#b3e5fc',
@@ -39,25 +43,27 @@ export class CreditsScene extends Phaser.Scene {
       { text: '', color: '#ffffff', size: '12px' },
       { text: 'Thank you for playing! Every rescue counts.', color: '#a5d6a7', size: '13px' },
     ];
-
     let y = 128;
+    const texts: Phaser.GameObjects.Text[] = [];
     for (const line of lines) {
-      this.add.text(width / 2, y, line.text, {
+      texts.push(this.add.text(400, y, line.text, {
         fontFamily: 'monospace',
         fontSize: line.size,
         color: line.color,
         align: 'center',
-      }).setOrigin(0.5);
+      }).setOrigin(0.5));
       y += 20;
     }
+    ui.add(texts);
 
-    const backBtn = this.add.text(width / 2, height - 30, '< BACK TO MENU', {
+    const backBtn = this.add.text(400, 570, '< BACK TO MENU', {
       fontFamily: 'monospace',
       fontSize: '14px',
       color: '#ffffff',
       backgroundColor: 'rgba(38,166,154,0.9)',
       padding: { x: 16, y: 9 },
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    ui.add(backBtn);
     backBtn.on('pointerover', () => backBtn.setBackgroundColor('rgba(0,150,136,0.95)'));
     backBtn.on('pointerout', () => backBtn.setBackgroundColor('rgba(38,166,154,0.9)'));
     backBtn.on('pointerdown', () => this.scene.start('MenuScene'));
