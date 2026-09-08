@@ -539,6 +539,32 @@ const SPRITES: Record<string, SpriteDef> = {
       '.WW.',
     ],
   },
+  // --- GITHUB MARK (20x20 pixel octocat head) ---
+  github_octocat: {
+    palette: { B: '#e6edf3', W: '#ffffff', A: '#8b949e' },
+    grid: [
+      '...BBB.......BBB....',
+      '..BBBB......BBBB....',
+      '..BBBBBB....BBBBBB..',
+      '.BBBBBBBBBBBBBBBBBB.',
+      '.BBBBBBBBBBBBBBBBBB.',
+      'BBBBBWWBBBBBBWWBBBBB',
+      'BBBBBBBBBBBBBBBBBBBB',
+      'BBBBBBBBBBBBBBBBBBBB',
+      'BBBBBBBBBBBBBBBBBBBB',
+      '.BBBBBBBBBBBBBBBBBB.',
+      '.BBBBBBBBBBBBBBBBBB.',
+      '..BBBBBBBBBBBBBBBB..',
+      '..BBBBBBBBBBBBBBBB..',
+      '...BBBBBBBBBBBBBB...',
+      '...BBBBBBBBBBBBBB...',
+      '....BBBBBBBBBBBB....',
+      '....BBBBBBBBBBBB....',
+      '.....BBBBBBBBBB.....',
+      '......BBBBBBBB......',
+      '.......BBBBBB.......',
+    ],
+  },
   joystick_base: {
     palette: { G: '#37474f', L: '#455a64' },
     grid: [

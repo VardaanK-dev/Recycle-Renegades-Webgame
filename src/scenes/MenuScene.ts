@@ -155,6 +155,24 @@ export class MenuScene extends Phaser.Scene {
     creditsBtn.on('pointerout', () => creditsBtn.setBackgroundColor('transparent'));
     creditsBtn.on('pointerdown', () => this.scene.start('CreditsScene'));
 
+    // GitHub badge: pixel octocat that opens the repo in a new tab
+    const ghIcon = this.add.image(400 + 241, 600 - 22, 'github_octocat')
+      .setScale(1.1)
+      .setInteractive({ useHandCursor: true });
+    ui.add(ghIcon);
+    const ghTip = this.add.text(400 + 241, 600 - 52, 'VIEW ON GITHUB', {
+      fontFamily: 'monospace',
+      fontSize: '11px',
+      color: '#ffffff',
+      backgroundColor: 'rgba(13,27,42,0.95)',
+      padding: { x: 10, y: 6 },
+    }).setOrigin(0.5).setVisible(false).setDepth(10);
+    ui.add(ghTip);
+    const GITHUB_URL = 'https://github.com/VardaanK-dev/Recycle-Renegades-Webgame';
+    ghIcon.on('pointerover', () => ghTip.setVisible(true));
+    ghIcon.on('pointerout', () => ghTip.setVisible(false));
+    ghIcon.on('pointerdown', () => window.open(GITHUB_URL, '_blank'));
+
     const fullBtn = this.add.text(width - 4, height - 22, 'FULL', {
       fontFamily: 'monospace',
       fontSize: '11px',
