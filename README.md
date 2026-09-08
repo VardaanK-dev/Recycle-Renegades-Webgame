@@ -16,7 +16,7 @@ Dive into the ocean as a diver-renegade and:
 - **Invest in real science** — collecting waste and rescuing life earns **Research Points (RP)**. Spend RP in the **Marine Science Lab** to buy real-world solutions that exist today: Seabin skimmers, the Great Bubble Barrier, Baltimore's Trash Wheel, coral nurseries, drone debris surveys, recycled-mesh nets and efficient swim fins. Each purchase teaches the science behind it.
 - **Dodge jellyfish** — drifting stingers appear in deeper levels; one life per sting.
 - **Learn as you play** — collecting plastic and using lab tools pops up real science facts.
-- **Full screen** — the game fills your browser window and can switch to true fullscreen (FULL button on the menu).
+- **Full screen** — the game fills your browser window and can switch to true fullscreen (FULL button on the menu, Refresh might be needed).
 - **Credits** — a CREDITS button on the menu lists the tools used to build the project (Phaser, TypeScript, Vite, opencode, etc.).
 
 ## 📣 Launch assets
