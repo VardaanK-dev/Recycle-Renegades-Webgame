@@ -5,7 +5,7 @@ A web-based **pixel art ocean conservation game** that educates players about th
 ![Tech](https://img.shields.io/badge/Phaser-3.90-blue) ![Lang](https://img.shields.io/badge/TypeScript-5.5-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## 🎮 Gameplay
-#**For best experience PC is recommended**
+**For best experience PC is recommended**
 
 Dive into the ocean as a diver-renegade and:
 
