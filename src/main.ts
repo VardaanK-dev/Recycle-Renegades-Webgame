@@ -54,3 +54,11 @@ const refreshScale = () => {
 
 window.addEventListener('resize', refreshScale);
 document.addEventListener('fullscreenchange', refreshScale);
+
+// Mobile browsers (esp. iOS) don't always fire window.resize when the address
+// bar shows/hides; the VisualViewport API gives us the true visible area.
+const vv = window.visualViewport;
+if (vv) {
+  vv.addEventListener('resize', refreshScale);
+  vv.addEventListener('scroll', refreshScale);
+}

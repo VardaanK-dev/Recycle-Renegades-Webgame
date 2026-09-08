@@ -25,7 +25,13 @@ interface Card {
 }
 
 export class ShopScene extends Phaser.Scene {
+  private bg!: Phaser.GameObjects.Image;
+  private title!: Phaser.GameObjects.Text;
+  private subtitle!: Phaser.GameObjects.Text;
+  private backBtn!: Phaser.GameObjects.Text;
+  private coin!: Phaser.GameObjects.Image;
   private rpText!: Phaser.GameObjects.Text;
+  private hintText!: Phaser.GameObjects.Text;
   private infoText!: Phaser.GameObjects.Text;
   private cards: Card[] = [];
   private cardH = 86;
@@ -33,16 +39,66 @@ export class ShopScene extends Phaser.Scene {
   private scrollY = 0;
   private minScroll = 0;
   private maxScroll = 0;
+  private dragging = false;
+  private dragLastY = 0;
+  private wheelTarget = 0;
+  private velocity = 0;
 
   constructor() {
     super('ShopScene');
   }
 
+  private handleResize(): void {
+    const { width, height } = this.scale;
+    this.bg.setDisplaySize(width, height);
+
+    this.title.setX(width / 2);
+    this.subtitle.setX(width / 2);
+    this.backBtn.setPosition(64, 88);
+    this.coin.setPosition(width - 46, 92);
+    this.rpText.setX(width - 130);
+    this.infoText.setX(width / 2).setY(height - 64);
+    this.infoText.setWordWrapWidth(Math.min(680, width - 40));
+    this.hintText.setX(width / 2);
+    this.hintText.setWordWrapWidth(Math.max(200, Math.min(520, width - 420)));
+
+    this.layoutCards();
+    this.recomputeScroll();
+  }
+
+  private layoutCards(): void {
+    const cardX = this.scale.width / 2;
+    const cardW = Math.min(742, this.scale.width - 16);
+    for (const card of this.cards) {
+      const left = cardX - cardW / 2;
+      const right = cardX + cardW / 2;
+      card.rect.setX(cardX).setSize(cardW, this.cardH);
+      card.icon.setX(left + 46);
+      card.name.setX(left + 88);
+      card.category.setX(left + 88);
+      card.desc.setX(left + 88);
+      card.desc.setWordWrapWidth(Math.max(80, right - 240 - (left + 88)));
+      card.coin.setX(right - 214);
+      card.cost.setX(right - 202);
+      card.count.setX(right - 202);
+      card.buyBtn.setX(right - 96);
+    }
+  }
+
+  private recomputeScroll(): void {
+    const startTop = 120;
+    const contentBottom = startTop + this.cards.length * (this.cardH + this.gap);
+    const viewBottom = this.scale.height - 104;
+    this.maxScroll = 0;
+    this.minScroll = Math.min(0, viewBottom - contentBottom);
+    this.setScroll(this.scrollY);
+  }
+
   create(): void {
     const { width, height } = this.scale;
-    this.add.image(0, 0, 'results_bg').setOrigin(0).setDisplaySize(width, height);
+    this.bg = this.add.image(0, 0, 'results_bg').setOrigin(0).setDisplaySize(width, height);
 
-    const title = this.add.text(width / 2, 34, 'MARINE SCIENCE LAB', {
+    this.title = this.add.text(width / 2, 34, 'MARINE SCIENCE LAB', {
       fontFamily: 'monospace',
       fontSize: '26px',
       color: '#4dd0e1',
@@ -50,24 +106,24 @@ export class ShopScene extends Phaser.Scene {
       strokeThickness: 3,
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, 64, 'Spend Research Points (RP) on real-world solutions to save marine life', {
+    this.subtitle = this.add.text(width / 2, 64, 'Spend Research Points (RP) on real-world solutions to save marine life', {
       fontFamily: 'monospace',
       fontSize: '12px',
       color: '#b3e5fc',
     }).setOrigin(0.5);
 
-    const backBtn = this.add.text(70, 92, '< MENU', {
+    this.backBtn = this.add.text(64, 88, '< BACK TO MENU', {
       fontFamily: 'monospace',
-      fontSize: '15px',
+      fontSize: '16px',
       color: '#ffffff',
-      backgroundColor: 'rgba(38,166,154,0.9)',
-      padding: { x: 12, y: 7 },
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    backBtn.on('pointerover', () => backBtn.setBackgroundColor('rgba(0,150,136,0.95)'));
-    backBtn.on('pointerout', () => backBtn.setBackgroundColor('rgba(38,166,154,0.9)'));
-    backBtn.on('pointerdown', () => this.scene.start('MenuScene'));
+      backgroundColor: 'rgba(38,166,154,0.95)',
+      padding: { x: 16, y: 9 },
+    }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true }).setDepth(1300);
+    this.backBtn.on('pointerover', () => this.backBtn.setBackgroundColor('rgba(0,150,136,1)'));
+    this.backBtn.on('pointerout', () => this.backBtn.setBackgroundColor('rgba(38,166,154,0.95)'));
+    this.backBtn.on('pointerdown', () => this.scene.start('MenuScene'));
 
-    const coin = this.add.image(width - 46, 92, 'rr_coin').setScale(1.8);
+    this.coin = this.add.image(width - 46, 92, 'rr_coin').setScale(1.8);
     this.rpText = this.add.text(width - 130, 92, '', {
       fontFamily: 'monospace',
       fontSize: '16px',
@@ -87,9 +143,6 @@ export class ShopScene extends Phaser.Scene {
       align: 'center',
     }).setOrigin(0.5).setDepth(1200);
 
-    void title;
-    void coin;
-
     this.buildList();
 
     const hintW = Math.max(200, Math.min(520, width - 420));
@@ -100,6 +153,11 @@ export class ShopScene extends Phaser.Scene {
       wordWrap: { width: hintW },
       align: 'center',
     }).setOrigin(0.5);
+
+    this.scale.on('resize', this.handleResize, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.scale.off('resize', this.handleResize, this);
+    });
 
     // Smooth scrolling: drag with inertia + wheel
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
@@ -123,12 +181,6 @@ export class ShopScene extends Phaser.Scene {
 
     this.events.on(Phaser.Scenes.Events.UPDATE, this.updateScroll, this);
   }
-
-  private hintText!: Phaser.GameObjects.Text;
-  private dragging = false;
-  private dragLastY = 0;
-  private wheelTarget = 0;
-  private velocity = 0;
 
   private updateScroll(): void {
     // Smoothly ease the wheel target toward the current scroll.
@@ -158,11 +210,7 @@ export class ShopScene extends Phaser.Scene {
       return this.buildCard(item, top);
     });
 
-    const contentBottom = startTop + this.cards.length * (this.cardH + this.gap);
-    const viewBottom = this.scale.height - 104;
-    this.maxScroll = 0;
-    this.minScroll = Math.min(0, viewBottom - contentBottom);
-    this.setScroll(0);
+    this.recomputeScroll();
   }
 
   private buildCard(item: ShopItem, top: number): Card {

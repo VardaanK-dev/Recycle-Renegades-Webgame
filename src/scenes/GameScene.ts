@@ -575,6 +575,11 @@ export class GameScene extends Phaser.Scene {
     this.scoreMgr.update(delta);
     this.updatePowerUpEffects();
 
+    // Touch (and space) action → dash
+    if (this.inputManager.actionJustPressed) {
+      this.player.tryDash(time);
+    }
+
     this.player.update(time, this.currentSpeed, delta);
     this.spawner.update(time, this.player);
     this.bg.update(this.cameras.main.scrollX);
