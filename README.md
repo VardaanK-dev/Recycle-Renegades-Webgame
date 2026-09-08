@@ -5,7 +5,7 @@ A web-based **pixel art ocean conservation game** that educates players about th
 ![Tech](https://img.shields.io/badge/Phaser-3.90-blue) ![Lang](https://img.shields.io/badge/TypeScript-5.5-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## 🎮 Gameplay
-
+#**For best experience PC is recommended**
 Dive into the ocean as a diver-renegade and:
 
 - **Collect plastic waste** — bottles, bags, straws, cups and ghost fishing nets drifting through the water.
@@ -29,7 +29,7 @@ Dive into the ocean as a diver-renegade and:
 
 ## 🎮 Hidden easter eggs
 
-- **PC:** type `/unlockall` on the menu to unlock every level and get 5000 RP.
+- **PC:** type `/unlockall` on the menu to unlock every level and get 5000 RP. 
 - **Mobile / touch:** tap the **RECYCLE RENEGADES title 5 times** quickly on the menu.
 
 ## 🧮 Math & Data Integration
